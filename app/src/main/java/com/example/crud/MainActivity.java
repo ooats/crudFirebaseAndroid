@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         openBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, RVActivity.class));
+                startActivity(new Intent(MainActivity.this, Functions.class));
             }
         });
         DAOEmployee dao = new DAOEmployee();

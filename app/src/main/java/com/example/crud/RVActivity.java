@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +35,7 @@ public class RVActivity extends AppCompatActivity {
     //RVAdapter adapter;
     DAOEmployee dao;
     FirebaseRecyclerAdapter adapter;
+    Query query;
     boolean isLoading = false;
     String key = null;
 
@@ -48,7 +50,9 @@ public class RVActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         dao = new DAOEmployee();
-        FirebaseRecyclerOptions<Employee> option = new FirebaseRecyclerOptions.Builder<Employee>().setQuery(dao.get(), new SnapshotParser<Employee>() {
+        query = querySelector(dao);
+
+        FirebaseRecyclerOptions<Employee> option = new FirebaseRecyclerOptions.Builder<Employee>().setQuery(query, new SnapshotParser<Employee>() {
             @NonNull
             @org.jetbrains.annotations.NotNull
             @Override
@@ -72,6 +76,7 @@ public class RVActivity extends AppCompatActivity {
                 Toast.makeText(RVActivity.this, "data changed", Toast.LENGTH_SHORT).show();
             }
 
+            //method puts details from db Object in cards
             @Override
             protected void onBindViewHolder(@NonNull @NotNull RecyclerView.ViewHolder holder, int position, @NonNull @NotNull Object model) {
                 EmployeeVH vh = (EmployeeVH)holder ;
@@ -105,8 +110,6 @@ public class RVActivity extends AppCompatActivity {
                                             Toast.makeText(RVActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
-
-
                                     break;
                             }
                             return false;
@@ -119,6 +122,15 @@ public class RVActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         
 
+    }
+
+    private Query querySelector(DAOEmployee dao) {
+        Intent i = getIntent();
+        String str = i.getStringExtra("getallpeople");
+        if(str.equals("position")){
+            return dao.getPosition();
+        }
+        return dao.get();
     }
 
     @Override

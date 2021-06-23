@@ -33,7 +33,10 @@ public class DAOEmployee {
             return databaseRefence.orderByKey().limitToFirst(8);
         }
         return databaseRefence.orderByKey().startAfter(key).limitToFirst(8);
+    }
+    public Query getPosition(){
 
+        return databaseRefence.orderByChild("position").equalTo("manager");
     }
 }
 
